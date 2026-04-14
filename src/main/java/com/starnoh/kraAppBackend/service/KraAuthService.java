@@ -44,6 +44,14 @@ public class KraAuthService {
         String consumerKey = kraConfig.getConsumerKey();
         String consumerSecret = kraConfig.getConsumerSecret();
 
+        if (consumerKey == null || consumerKey.isEmpty() ||
+                consumerSecret == null || consumerSecret.isEmpty()) {
+            throw new JSONException("Auth credentials not provided");
+        }
+
+        System.out.println("Here is the consumer key " + consumerKey);
+        System.out.println("Here is the consumer secret " + consumerSecret);
+
         String credentials = consumerKey + ":" + consumerSecret;
         String encoded = Base64.getEncoder().encodeToString(credentials.getBytes());
 
@@ -56,6 +64,8 @@ public class KraAuthService {
         try (Response response = client.newCall(request).execute()){
 
             String json = response.body().string();
+
+            System.out.println("Here is the response " + json);
 
             if (!response.isSuccessful()) {
                 throw new RuntimeException("Failed: " + response.code());
@@ -73,6 +83,7 @@ public class KraAuthService {
         } catch(Exception e) {
 
             System.out.println("Something went wrong : " + e.getMessage());
+            e.printStackTrace();
 
         }
 

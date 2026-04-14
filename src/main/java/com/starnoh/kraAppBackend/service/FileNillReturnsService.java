@@ -28,6 +28,12 @@ public class FileNillReturnsService {
         try {
             String accessToken = kraAuthService.getAccessToken();
 
+            if(accessToken == null || accessToken.isEmpty()){
+                throw new RuntimeException("Access Token is not provided");
+            }
+
+            System.out.println("Here is the access token " + accessToken);
+
             String url = "https://sbx.kra.go.ke/dtd/return/v1/nil";
             HttpHeaders headers = new HttpHeaders();
             headers.setBearerAuth(accessToken);

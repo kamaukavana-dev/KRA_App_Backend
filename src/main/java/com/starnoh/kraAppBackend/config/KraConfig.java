@@ -5,10 +5,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "kra.consumer")
 public class KraConfig {
 
+    @Value("${kra.consumer.key}")
     private String consumerKey;
+
+    @Value("${kra.consumer.secret}")
     private String consumerSecret;
 
     public String getConsumerKey() {
@@ -18,17 +20,6 @@ public class KraConfig {
     public String getConsumerSecret() {
         return consumerSecret;
     }
-
-
-    public void setConsumerKey(String consumerKey) {
-        this.consumerKey = consumerKey;
-    }
-
-    public void setConsumerSecret(String consumerSecret) {
-        this.consumerSecret = consumerSecret;
-    }
-
-
 
 
 }
