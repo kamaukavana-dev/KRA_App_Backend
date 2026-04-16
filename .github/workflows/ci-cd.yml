@@ -33,3 +33,29 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/kra-app-backend:latest
+
+      # 🚀 NEW: Deploy to VPS
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            echo "🚀 Pulling latest image..."
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/kra-app-backend:latest
+
+            echo "🛑 Stopping old container..."
+            docker stop kra-app-backend || true
+
+            echo "🗑 Removing old container..."
+            docker rm kra-app-backend || true
+
+            echo "▶️ Starting new container..."
+            docker run -d -p 8080:8080 \
+              --name kra-app-backend \
+              -e CONSUMER_KEY=${{ secrets.CONSUMER_KEY }} \
+              -e CONSUMER_SECRET=${{ secrets.CONSUMER_SECRET }} \
+              ${{ secrets.DOCKER_HUB_USERNAME }}/kra-app-backend:latest
+
+            echo "✅ Deployment complete!"
